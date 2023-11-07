@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Combined News</title>
+      <style>
+        /* CSS 스타일 추가 */
+        #naver_news, #kakao_news {
+            display: inline-block;
+            width: 48%;
+
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="검색어를 입력하세요" aria-label="Recipient's username" aria-describedby="button-addon2" id="search">
+        <button class="btn btn-outline-secondary" type="button" id="btn">검색</button>
+      </div>
+
+    <div class="row">
+      <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card",id="naver_news">
+          <div class="card-body">
+            <h5 class="card-title">NAVER NEWS</h5>
+              <ul id="naver_list"></ul>
+          </div>
+          </div>
+        </div>
+<!--      </div>-->
+      <div class="col-sm-6">
+        <div class="card", id="kakao_news">
+          <div class="card-body">
+            <h5 class="card-title">KAKAO NEWS</h5>
+            <ul id="kakao_list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script>
+        $(document).ready(function(){
+            const KAKAO_REST_API_KEY = 'd0f786cef81189455df44475d58e7054';
+
+            $("#btn").click(function(){
+                let q = $('#search').val();
+                //데이터 갯수 100개
+                let maxResults = 100;
+
+                // Fetch data from both Naver and Kakao APIs
+                $.ajax({
+                    url: '/plus_news',  // Use your endpoint for fetching combined news data
+                    type: 'GET',
+                    data: { query: q, maxResults: maxResults },
+                    success: function(data) {
+
+                        // Update Naver News
+                        let naverNews = data.naver_news.items;
+                        let naverList = $("#naver_list");
+                        naverList.empty();
+                       for (let i = 0; i < naverNews.length; i++){
+
+                            let similarity = data.naver_similarities[i];
+                            naverList.append('<li>' + naverNews[i].title + ': ' + naverNews[i].description + ' (Naver 유사도: ' + similarity + ')</li>');
+
+                         console.log(naverNews)
+                        }
+
+                        // Update Kakao News
+                        let kakaoNews = data.kakao_news.documents;
+                        let kakaoList = $("#kakao_list");
+                        kakaoList.empty();
+                          for (let i = 0; i < kakaoNews.length; i++) {
+
+                            let similarity = data.kakao_similarities[i];
+                            kakaoList.append('<li>' + kakaoNews[i].title + ': ' + kakaoNews[i].contents + ' (Kakao 유사도: ' + similarity + ')</li>');
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+
+</html>

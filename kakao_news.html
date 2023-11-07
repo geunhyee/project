@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script>
+        $(document).ready(function(){
+            // 카카오 API 키
+            const KAKAO_REST_API_KEY = 'd0f786cef81189455df44475d58e7054';
+
+            $("#btn").click(function(){
+                let q = $('#search').val();
+                let api_url = 'http://127.0.0.1:5000/kakao_news';
+                let maxResults = 100;
+
+                $.ajax({
+                    url: api_url,
+                    type: 'GET',
+                    data: {query:q, maxResults: maxResult},
+                    success: function(res) {
+                        let result = res.documents;
+                        console.log(result);
+
+                        // 결과를 출력하기 전에 기존 내용을 지우기
+                        $("#result").empty();
+
+                        for(let i in result){
+                            let description = result[i].contents;
+                            $("#result").append( '<span>' + result[i].contents +'</span>');
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);e
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <input type="text" id="search">
+    <button id="btn" type="button">검색</button>
+    <div id="result"></div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            // 네이버 API 키
+            const CLIENT_ID = 'ugZJpWLTI5E5CLAVmEZ6';
+            const CLIENT_SECRET = '2A7McIdvhC';
+
+            $("#btn").click(function(){
+
+                let q = $('#search').val();
+                let api_url = 'http://127.0.0.1:5000/news';
+                let maxResults = 100;
+
+                $.ajax({
+                    url: api_url,
+                    type: 'GET', // GET 요청으로 변경
+                    data: {query:q, maxResults: maxResults},
+                    success: function(res) {
+                        //console.log(res);
+
+                        let result = res.items;
+                        console.log(result);
+
+                        $("#result").empty();
+
+                        for(let i in result){
+                            $("#result").append( '<span>' + result[i]['description'] +'</>span>');
+                        }
+
+
+
+
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        print("찾을수 없습니다")
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <input type="text" id="search" style="width: 300px, height: 200px">
+    <button id="btn" type="button">검색</button>
+    <div id="result"></div>
+
+
+</body>
+</html>
