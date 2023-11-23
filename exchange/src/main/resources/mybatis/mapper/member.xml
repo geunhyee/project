@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exchange.pp.member.dao.EXIMemberDAO">
+<insert id="registMember" parameterType="com.exchange.pp.member.vo.exMemberVO">
+	  INSERT INTO member(
+	                      mem_id
+	                     ,mem_pw
+	                     ,mem_nm
+	                     ,mem_email
+	  					 )
+	  					 VALUES(
+	  					  #{memId}
+	  					 ,#{memPw}
+	  					 ,#{memNm}
+	  					 ,#{memEmail}
+	  					 )
+</insert>
+<select id="loginMember" parameterType="exMemberVO" resultType="exMemberVO">
+	  SELECT mem_id
+	        ,mem_pw
+	        ,mem_nm
+	        ,profile_img
+	  FROM member
+	  WHERE mem_id =#{memId}
+	  AND   mem_pw =#{memPw} 
+	  AND   del_yn = 'N'
+</select>
+<update id="profileUpload" parameterType="exMemberVO">
+	UPDATE member
+	SET profile_img =#{profileImg}
+	WHERE mem_id = #{memId}
+</update>
+
+
+</mapper>

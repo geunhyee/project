@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exchange.pp.code.dao.ICodeDAO">
+<!-- <insert id="registMember" parameterType="com.exchange.pp.member.vo.exMemberVO"> -->
+	<!--   INSERT INTO member(
+	                      mem_id
+	                     ,mem_pw
+	                     ,mem_nm
+	                     ,mem_email
+	  					 )
+	  					 VALUES(
+	  					  #{memId}
+	  					 ,#{memPw}
+	  					 ,#{memNm}
+	  					 ,#{memEmail}
+	  					 ) -->
+<!-- </insert> -->
+<select id="getCodeListByParent" parameterType="CodeVO" resultType="CodeVO">
+	  
+	  SELECT EXCHAGE_NAME as EXCHAGE_NM
+		     , EXCHANGE_PRICE
+		     , TO_CHAR(EXCHANGE_DATE,'MM/DD') as EXCHANGE_DATE
+	 FROM exchange
+	 WHERE EXCHANGE_CODE =#{EXCHANGE_CODE}
+	  
+	  
+</select>
+<select id="getList" parameterType="CodeVO" resultType="CodeVO">
+	  
+	  SELECT 
+		     EXCHANGE_CODE
+	  		 ,exchage_NAME as exchage_NM
+		     , EXCHANGE_PRICE
+		     , TO_CHAR(EXCHANGE_DATE,'MM/DD') as EXCHANGE_DATE
+	 FROM exchange
+	
+	  
+	  
+	  
+</select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.exchange.pp.bank.dao.IBankDAO">
+<insert id="writebank" parameterType="BankVO">
+	INSERT INTO bank( bank_kindmoney
+					, bank_amoumoney
+					, bnak_krwmoney
+					)
+			VALUES (
+        		#{kindMoney}
+       			,#{bankMmoumoney}
+       			,#{krwMoney}
+			)
+
+        
+	
+</insert>
+<select id="getBankList"  resultType="BankVO">
+		SELECT 
+                bank_date 
+                ,bank_kindmoney 
+                ,bank_amoumoney 
+                ,bnak_krwmoney 
+        FROM bank
+					
+</select>
+
+</mapper>
