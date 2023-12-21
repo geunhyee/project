@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+	  <!-- Oracle 테이블의 컬럼이 mem_id 이고, DTO의 필드변수가 memId 일때 매칭이 가능하게 하는 옵션 -->
+	  <setting name="mapUnderscoreToCamelCase" value="true"/> 
+	</settings>
+	<!-- mapper vo 매핑 -->
+	<typeAliases>
+		
+		
+		
+		<typeAlias type="com.carina.cbs.board.freeboard.vo.SearchVO" alias="SearchVO"></typeAlias>
+		<typeAlias type="com.carina.cbs.board.freeboard.vo.ReplyVO" alias="ReplyVO"></typeAlias>
+		<typeAlias type="com.carina.cbs.board.actboard.vo.ActBoardVO" alias="ActBoardVO"></typeAlias>
+		<!-- <typeAlias type="com.carina.cbs.board.freeboard.vo.FreeBoardSearchVO" alias="FreeBoardSearchVO"></typeAlias> -->
+		<typeAlias type="com.carina.cbs.board.freeboard.vo.FreeBoardVO" alias="FreeBoardVO"></typeAlias>
+		<!-- <typeAlias type="com.carina.cbs.board.freeboard.vo.FreeBoardSearchVO" alias="FreeBoardSearchVO"></typeAlias> -->
+		<typeAlias type="com.carina.cbs.cbi.vo.CbiVO" alias="CbiVO" />
+		<typeAlias type="com.carina.cbs.member.vo.MemberVO" alias="MemberVO"></typeAlias>
+		<typeAlias type="com.carina.cbs.cbic.vo.CbicVO" alias="CbicVO" />
+		<typeAlias type="com.carina.cbs.emp.vo.EmpVO" alias="EmpVO"></typeAlias>
+		<typeAlias type="com.carina.cbs.cbs.cbs.vo.CbsVO" alias="CbsVO"></typeAlias>
+	</typeAliases>
+	
+        
+	
+	
+</configuration>
