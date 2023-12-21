@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carina.cbs.board.freeboard.dao.IFreeBoardDAO">
+
+<!-- 자유게시판  글쓰기부분 -->
+<insert id="freeboardwrite" parameterType="FreeBoardVO">
+
+		INSERT INTO board (
+   	 	board_no,
+    	board_title,
+   	    board_content,
+    	mem_id
+	)
+		SELECT 
+	    COALESCE(MAX(board_no), 0) + 1,
+	    #{boardTitle},
+	    #{boardContent},
+	   #{memId}
+		FROM board
+
+</insert>
+<!-- 자유게시판 게시글목록-->
+ <select id ="getfreeboardList" resultType="FreeboardVO">
+ 	SELECT
+ 	 board_no
+	  ,board_title
+	  ,board_content
+	  ,mem_id
+	  ,create_date
+	  ,update_date
+	  ,board_hit
+	  ,del_yn as board_del_yn
+FROM board 
+WHERE del_yn = 'N'
+ORDER BY board_no desc
+ </select>  
+ <!-- 자유게시판 디테일화면  -->
+<select id="getFreeBoard"  resultType="FreeboardVO" parameterType="int">
+	SELECT a.board_no
+        ,a.board_title
+        ,a.board_content
+        ,a.mem_id
+        ,a.create_date
+        ,a.update_date
+        ,board_hit
+	FROM board a
+    JOIN member b ON a.mem_id = b.mem_id
+	WHERE   a.board_no = #{boardNo}
+
+</select>
+
+<!-- 게시글 조회수 업데이트
+페이지 클릭이 +1되는 업데이트문-->
+<update id="boardHit">
+	UPDATE board 
+		SET board_hit = board_hit + 1
+		WHERE board_No = #{boardNo}
+
+</update>
+
+
+
+<!-- 자유게시판 수정했을때 -->
+<update id="updateBoard" parameterType="FreeBoardVO">
+	UPDATE board
+	SET board_title = #{boardTitle}
+		,board_content = #{boardContent}
+		,update_date = CURRENT_TIMESTAMP
+	WHERE board_no = #{boardNo}
+
+</update>
+<!--  자유게시판 게시글 삭제했을때-->
+<update id="deleteBoard" parameterType="int">
+	UPDATE board
+	SET   del_yn = 'Y'
+	WHERE board_no = #{boardNo}
+</update>
+ 
+ <!--댓글작성부분  -->
+ 
+ <insert id="writeReply" parameterType="com.carina.cbs.board.freeboard.vo.ReplyVO">
+    INSERT INTO board_reply (
+        reply_no,
+        board_no,
+        mem_id,
+        reply_content
+
+    )
+    VALUES (
+        
+         CAST(#{replyNo} AS SIGNED),
+        #{boardNo},
+        #{memId},
+        #{replyContent}
+    )
+</insert>
+ <!-- 댓글읽어오는 -->
+ <select id="getReply" parameterType="String" resultType="ReplyVO">
+    SELECT
+        a.reply_no,
+        a.mem_id,
+        a.reply_content,
+        DATE_FORMAT(a.reply_date, '%m/%d %H:%i') as reply_date
+    FROM
+        board_reply a
+        JOIN member b ON a.mem_id = b.mem_id
+    WHERE
+        a.reply_no = #{replyNo}
+</select>
+
+<!-- 댓글목록리스트 -->
+<select id="getReplyList" parameterType="int" resultType="com.carina.cbs.board.freeboard.vo.ReplyVO">
+    SELECT
+        a.reply_no,
+        a.mem_id,
+        a.reply_content,
+        DATE_FORMAT(a.reply_date, '%m/%d %H:%i') AS reply_date
+    FROM
+        board_reply a
+        JOIN member b ON a.mem_id = b.mem_id
+    WHERE
+        a.board_no = #{boardNo}
+        AND a.reply_del_yn = 'N'
+    ORDER BY
+        a.reply_date DESC
+</select>
+
+<!-- 댓글삭제 -->
+<update id="delReply" parameterType="String">
+    UPDATE board_reply
+    SET reply_del_yn = 'Y'
+    WHERE reply_no=#{replyNo}
+</update>
+
+ 
+ 
+ 
+
+ <sql id="prePage">
+    SELECT a.* FROM (
+</sql>
+ <!-- 수정전 -->
+ <!-- <sql id="postPage">
+    ) a ) AS b
+    WHERE rnum BETWEEN #{firstRow} AND #{lastRow}
+</sql> -->
+<sql id="postPage">
+    ) a 
+    LIMIT #{rowSizePerPage} OFFSET #{firstRow}
+</sql>
+ 
+	<!-- 정적메소드 사용 방법.  @클래스이름@메소드이름(파라미터이름) -->
+ <sql id="boardSearch">
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyword)">
+        <choose>
+            <when test='searchOption == "T"'>
+                AND a.board_title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test='searchOption == "W"'>
+                AND a.mem_id LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test='searchOption == "C"'>
+                AND a.board_content LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+        </choose>
+    </if>
+</sql>
+ 
+<!--/검색 -->
+ <select id="searchBoardList" resultType="FreeBoardVO"  parameterType="SearchVO">
+ 
+ 	<include refid="prePage" ></include>
+    SELECT a.board_no,
+           a.board_title,
+           a.board_content,
+           a.mem_id,
+           a.create_date,
+           a.update_date,
+           a.board_hit
+    FROM board a
+    JOIN member b ON a.mem_id = b.mem_id
+    WHERE a.del_yn = 'N'
+   <include refid="boardSearch" ></include>
+    ORDER BY a.update_date DESC
+    <include refid="postPage" ></include>
+</select>
+
+  <select id="getTotalRowCount" parameterType="SearchVO" resultType="int">
+    SELECT COUNT(*)
+    FROM board a
+    WHERE 1=1
+     AND a.del_yn = 'N'
+    <include refid="boardSearch"></include>
+</select>
+
+
+ 
+ 
+ 
+ 
+ 
+
+ 
+</mapper>
