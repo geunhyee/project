@@ -33,8 +33,13 @@ public class NewsServiceImpl implements NewsServcie {
 	
 	
 	private String apiUrl = "https://openapi.naver.com/v1/search/news";
-	private String clientId = "ugZJpWLTI5E5CLAVmEZ6";
-	private String clientSecret = "2A7McIdvhC";
+	/*
+ 	clientId,
+  	clientSecret
+    	네이버디벨로퍼에서
+  	*/
+	private String clientId = 
+	private String clientSecret = 
 
 	@Override
 	@Transactional
